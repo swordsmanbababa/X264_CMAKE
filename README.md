@@ -15,7 +15,9 @@
   - step1 选择cmake选项
   - step2 点击配置所有项目
   <img src="https://user-images.githubusercontent.com/27400085/179201705-a4501e8b-6334-4adc-9bcc-a3f5d117442c.png" height = "500" width="1050">
+  
 ### 2 从build目录选择生成的  x264.sln  文件打开
+
   <img src="https://user-images.githubusercontent.com/27400085/179202071-4b0c7553-f306-4442-9f19-eb0e0c4d8101.png" height = "500" width="1050">
   
 ### 3 配置运行参数
