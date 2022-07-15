@@ -5,51 +5,91 @@ cmake_minimum_required(VERSION 3.22.2)
 set(CMAKE_BUILD_TYPE DEBUG CACHE STRING
     "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel."
     FORCE)
-set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS}  -Wall -I. -O4 -ffast-math -D__X264__ -DHAVE_MALLOC_H  -fomit-frame-pointer -DHAVE_GETOPT_LONG=1")
+set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS}    -O2 -fp:fast -I. -I. -nologo -GS- -I./extras")
+set(CMAKE_EXE_LINKER_FLAGS   "-nologo -incremental:no")
 #设置项目名称
 project (x264)
 
 #选项
 option(ENABLE_ASSEMBLY "Enable use of assembly coded primitives" OFF)
-add_definitions(-DHAVE_MMX=0)
-add_definitions(-D__X264__)
-
+add_definitions(-DHIGH_BIT_DEPTH=0)
+add_definitions(-DBIT_DEPTH=8)
+add_definitions(-DHAVE_STRING_H)
+# add_definitions(-DNDEBUG)
 #构建
 aux_source_directory(./common/ DIR_COMMON_SRCS)
 aux_source_directory(./encoder/ DIR_ENCODER_SRCS)
 aux_source_directory(./extras/ DIR_EXTRA_SRCS)
 
 
-set(SRCS  common/osdep.c common/base.c common/cpu.c common/tables.c 
-       encoder/api.c)
-set(SRCS_X common/mc.c common/predict.c common/pixel.c common/macroblock.c 
-    common/frame.c common/dct.c common/cabac.c 
-    common/common.c common/rectangle.c 
-    common/set.c common/quant.c common/deblock.c common/vlc.c 
-    common/mvpred.c common/bitstream.c 
-    encoder/analyse.c encoder/me.c encoder/ratecontrol.c 
-    encoder/set.c encoder/macroblock.c encoder/cabac.c 
-    encoder/cavlc.c encoder/encoder.c encoder/lookahead.c)
+set(SRCS 
+autocomplete.c    
+input/input.c    
+input/timecode.c    
+input/raw.c    
+input/y4m.c    
+output/raw.c    
+output/matroska.c    
+output/matroska_ebml.c    
+output/flv.c    
+output/flv_bytestream.c    
+filters/filters.c    
+filters/video/video.c    
+filters/video/source.c    
+filters/video/internal.c    
+filters/video/resize.c    
+filters/video/fix_vfr_pts.c    
+filters/video/select_every.c    
+filters/video/crop.c    
+input/avs.c    
+extras/getopt.c    
+filters/video/cache.c    
+filters/video/depth.c    
+input/thread.c    
+common/osdep.c    
+common/base.c    
+common/cpu.c    
+common/tables.c    
+encoder/api.c    
+common/win32thread.c    
+common/mc.c    
+common/predict.c    
+common/pixel.c    
+common/macroblock.c    
+common/frame.c    
+common/dct.c    
+common/cabac.c    
+common/common.c    
+common/rectangle.c    
+common/set.c    
+common/quant.c    
+common/deblock.c    
+common/vlc.c    
+common/mvpred.c    
+common/bitstream.c    
+encoder/analyse.c    
+encoder/me.c    
+encoder/ratecontrol.c    
+encoder/set.c    
+encoder/macroblock.c    
+encoder/cabac.c    
+encoder/cavlc.c    
+encoder/encoder.c    
+encoder/lookahead.c    
+common/threadpool.c    
+common/opencl.c    
+encoder/slicetype-cl.c 
+)
 
-set(SRCCLI  autocomplete.c input/input.c input/timecode.c input/raw.c 
-    input/y4m.c output/raw.c output/matroska.c output/matroska_ebml.c 
-    output/flv.c output/flv_bytestream.c filters/filters.c 
-    filters/video/video.c filters/video/source.c filters/video/internal.c 
-    filters/video/resize.c filters/video/fix_vfr_pts.c 
-    filters/video/select_every.c filters/video/crop.c)
 
-set(INPUT_FILE "./x264.c")
 
 include_directories(./)
 include_directories(./common/)
 include_directories(./encoder)
 include_directories(./extras/)
 
-
-add_definitions(-DBIT_DEPTH=8)
-add_definitions(-DHIGH_BIT_DEPTH=0)
-
-add_executable("x264" ${INPUT_FILE} ${SRCS} ${SRCS_X} ${SRCCLI})
+add_library("libx264"  ${SRCS})
+add_executable("x264" ./x264.c)
 target_include_directories("x264" PRIVATE
     "./"
     "./common/"
@@ -60,5 +100,6 @@ target_include_directories("x264" PRIVATE
     "./filters/video"
 )
 target_link_libraries("x264" 
-    -lpthread
+    libx264
+    shell32
 )

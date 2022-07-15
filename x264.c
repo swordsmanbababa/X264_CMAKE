@@ -1675,8 +1675,8 @@ generic_option:
     const cli_input_t *thread_input;
     if( HAVE_BITDEPTH8 && param->i_bitdepth == 8 )
         thread_input = &thread_8_input;
-    else if( HAVE_BITDEPTH10 && param->i_bitdepth == 10 )
-        thread_input = &thread_10_input;
+    else if( HAVE_BITDEPTH10 && param->i_bitdepth == 10 ){}
+        // thread_input = &thread_10_input;
     else
         thread_input = NULL;
 
