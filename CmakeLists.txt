@@ -1,5 +1,5 @@
 #最低CMAKE版本
-cmake_minimum_required(VERSION 3.22.2)
+cmake_minimum_required(VERSION 3.20.2)
 
 #设置代码编译类型
 set(CMAKE_BUILD_TYPE DEBUG CACHE STRING
