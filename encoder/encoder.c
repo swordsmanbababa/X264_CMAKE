@@ -3365,13 +3365,14 @@ int     x264_encoder_encode( x264_t *h,
         }
 
         /* 1: Copy the picture to a frame and move it to a buffer */
-        x264_frame_t *fenc = x264_frame_pop_unused( h, 0 );
+        x264_frame_t *fenc = x264_frame_pop_unused( h, 0 ); //获取1个x264_frame_t类型结构体fenc。如果frames.unused[]队列不为空，就调用x264_frame_pop()从unused[]队列取1个现成的；否则就调用x264_frame_new()创建一个新的。
         if( !fenc )
             return -1;
 
-        if( x264_frame_copy_picture( h, fenc, pic_in ) < 0 )
+        if( x264_frame_copy_picture( h, fenc, pic_in ) < 0 ) //将输入的图像数据拷贝至fenc
             return -1;
 
+        //简单的参数检查
         if( h->param.i_width != 16 * h->mb.i_mb_width ||
             h->param.i_height != 16 * h->mb.i_mb_height )
             x264_frame_expand_border_mod16( h, fenc );
@@ -3395,7 +3396,7 @@ int     x264_encoder_encode( x264_t *h,
         if( fenc->i_pic_struct == PIC_STRUCT_AUTO )
         {
 #if HAVE_INTERLACED
-            int b_interlaced = fenc->param ? fenc->param->b_interlaced : h->param.b_interlaced;
+            int b_interlaced = fenc->param ? fenc->param->b_interlaced : h->param.b_interlaced; //b帧交织编码?
 #else
             int b_interlaced = 0;
 #endif
@@ -3414,7 +3415,7 @@ int     x264_encoder_encode( x264_t *h,
                 return -1;
         }
         else
-            x264_adaptive_quant_frame( h, fenc, pic_in->prop.quant_offsets );
+            x264_adaptive_quant_frame( h, fenc, pic_in->prop.quant_offsets ); //进行自适应量化
 
         if( pic_in->prop.quant_offsets_free )
             pic_in->prop.quant_offsets_free( pic_in->prop.quant_offsets );
