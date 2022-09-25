@@ -3336,9 +3336,9 @@ int     x264_encoder_encode( x264_t *h,
 
     if( h->i_thread_frames > 1 )
     {
-        thread_prev    = h->thread[ h->i_thread_phase ];
+        thread_prev    = h->thread[ h->i_thread_phase ]; /* 编码上一帧的thread句柄*/
         h->i_thread_phase = (h->i_thread_phase + 1) % h->i_thread_frames;
-        thread_current = h->thread[ h->i_thread_phase ];
+        thread_current = h->thread[ h->i_thread_phase ]; /* 编码当前帧的thread句柄*/
         thread_oldest  = h->thread[ (h->i_thread_phase + 1) % h->i_thread_frames ];
         thread_sync_context( thread_current, thread_prev );
         x264_thread_sync_ratecontrol( thread_current, thread_prev, thread_oldest );
