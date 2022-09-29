@@ -780,7 +780,7 @@ x264_frame_t *x264_frame_pop_unused( x264_t *h, int b_fdec )
 {
     x264_frame_t *frame;
     if( h->frames.unused[b_fdec][0] )
-        frame = x264_frame_pop( h->frames.unused[b_fdec] );//��unused��popһ����ַ��Ϊ�յ�frame������ǰ���ͷŵ�ʱ��frame��ַ����������ˣ�����pop�ٴ�����
+        frame = x264_frame_pop( h->frames.unused[b_fdec] );/*获取1个x264_frame_t类型结构体fenc。如果frames.unused[]队列不为空，就调用x264_frame_pop()从unused[]队列取1个现成的；否则就调用x264_frame_new()创建一个新的*/
     else
         frame = frame_new( h, b_fdec );
     if( !frame )

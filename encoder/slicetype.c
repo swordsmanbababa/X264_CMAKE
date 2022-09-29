@@ -1473,9 +1473,9 @@ static int scenecut( x264_t *h, x264_mb_analysis_t *a, x264_frame_t **frames, in
 void x264_slicetype_analyse( x264_t *h, int intra_minigop )
 {
     x264_mb_analysis_t a;
-    x264_frame_t *frames[X264_LOOKAHEAD_MAX+3] = { NULL, };
+    x264_frame_t *frames[X264_LOOKAHEAD_MAX+3] = { NULL, };  // lookahead线程内帧数
     int num_frames, orig_num_frames, keyint_limit, framecnt;
-    int i_max_search = X264_MIN( h->lookahead->next.i_size, X264_LOOKAHEAD_MAX );
+    int i_max_search = X264_MIN( h->lookahead->next.i_size, X264_LOOKAHEAD_MAX );  // 最大搜索范围
     int b_vbv_lookahead = h->param.rc.i_vbv_buffer_size && h->param.rc.i_lookahead;
     /* For determinism we should limit the search to the number of frames lookahead has for sure
      * in h->lookahead->next.list buffer, except at the end of stream.
