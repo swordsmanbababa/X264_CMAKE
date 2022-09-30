@@ -361,7 +361,7 @@ static int get_plane_ptr( x264_t *h, x264_picture_t *src, uint8_t **pix, int *st
 
 int x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src )
 {
-    int i_csp = src->img.i_csp & X264_CSP_MASK;
+    int i_csp = src->img.i_csp & X264_CSP_MASK; //yuv type, color space
     if( dst->i_csp != frame_internal_csp( i_csp ) )
     {
         x264_log( h, X264_LOG_ERROR, "Invalid input colorspace\n" );
@@ -396,7 +396,7 @@ int x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src )
     else
         dst->i_forced_type = src->i_type;
 
-    dst->i_type     = dst->i_forced_type;
+    dst->i_type     = dst->i_forced_type; /* Slice type */
     dst->i_qpplus1  = src->i_qpplus1;
     dst->i_pts      = dst->i_reordered_pts = src->i_pts;
     dst->param      = src->param;
@@ -780,7 +780,7 @@ x264_frame_t *x264_frame_pop_unused( x264_t *h, int b_fdec )
 {
     x264_frame_t *frame;
     if( h->frames.unused[b_fdec][0] )
-        frame = x264_frame_pop( h->frames.unused[b_fdec] );
+        frame = x264_frame_pop( h->frames.unused[b_fdec] );/*获取1个x264_frame_t类型结构体fenc。如果frames.unused[]队列不为空，就调用x264_frame_pop()从unused[]队列取1个现成的；否则就调用x264_frame_new()创建一个新的*/
     else
         frame = frame_new( h, b_fdec );
     if( !frame )

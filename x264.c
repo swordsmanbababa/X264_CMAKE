@@ -43,6 +43,7 @@
 #include "input/input.h"
 #include "output/output.h"
 #include "filters/filters.h"
+// #include "third-party/include/windows/glib-2.0/glib.h"
 
 #define QP_MAX_SPEC (51+6*2)
 #define QP_MAX (QP_MAX_SPEC+18)
@@ -357,10 +358,15 @@ static void print_version_info( void )
 
 REALIGN_STACK int main( int argc, char **argv )
 {
+    printf( "enc_main start runing !\n");
+    for(int i = 0; i < argc; i++){
+        printf( "enc_main argc[%d] argv[%d]:%s\n", argc, i, argv[i]);
+    }
+
     if( argc == 4 && !strcmp( argv[1], "--autocomplete" ) )
         return x264_cli_autocomplete( argv[2], argv[3] );
 
-    x264_param_t param;
+    x264_param_t param; /* 创建必须的编码参数结构体 */
     cli_opt_t opt = {0};
     int ret = 0;
 
@@ -1969,6 +1975,7 @@ static int encode( x264_param_t *param, cli_opt_t *opt )
         fprintf( opt->tcfile_out, "# timecode format v2\n" );
 
     /* Encode frames */
+    /* i_frame 表示当前帧 */
     for( ; !b_ctrl_c && (i_frame < param->i_frame_total || !param->i_frame_total); i_frame++ )
     {
         if( filter.get_frame( opt->hin, &cli_pic, i_frame + opt->i_seek ) )
@@ -2008,6 +2015,8 @@ static int encode( x264_param_t *param, cli_opt_t *opt )
             parse_qpfile( opt, &pic, i_frame + opt->i_seek );
 
         prev_dts = last_dts;
+
+        /* 关键函数:编码当前帧 */
         i_frame_size = encode_frame( h, opt->hout, &pic, &last_dts );
         if( i_frame_size < 0 )
         {

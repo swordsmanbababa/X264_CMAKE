@@ -106,13 +106,16 @@ REALIGN_STACK static void *lookahead_thread( x264_t *h )
             while( !h->lookahead->ifbuf.i_size && !h->lookahead->b_exit_thread )
                 x264_pthread_cond_wait( &h->lookahead->ifbuf.cv_fill, &h->lookahead->ifbuf.mutex );
             x264_pthread_mutex_unlock( &h->lookahead->ifbuf.mutex );
+            // printf( "chenxi debug function[%s]:%d\n", __FUNCTION__, __LINE__);
         }
         else
         {
+            // printf( "chenxi debug function[%s]:%d\n", __FUNCTION__, __LINE__);
             x264_pthread_mutex_unlock( &h->lookahead->ifbuf.mutex );
             lookahead_slicetype_decide( h );
         }
     }   /* end of input frames */
+    // printf( "chenxi debug function[%s]:%d\n", __FUNCTION__, __LINE__);
     x264_pthread_mutex_lock( &h->lookahead->ifbuf.mutex );
     x264_pthread_mutex_lock( &h->lookahead->next.mutex );
     lookahead_shift( &h->lookahead->next, &h->lookahead->ifbuf, h->lookahead->ifbuf.i_size );
@@ -229,6 +232,7 @@ void x264_lookahead_get_frames( x264_t *h )
             x264_pthread_cond_wait( &h->lookahead->ofbuf.cv_fill, &h->lookahead->ofbuf.mutex );
         lookahead_encoder_shift( h );
         x264_pthread_mutex_unlock( &h->lookahead->ofbuf.mutex );
+        // printf( "chenxi debug function[%s]:%d\n", __FUNCTION__, __LINE__);
     }
     else
     {   /* We are not running a lookahead thread, so perform all the slicetype decide on the fly */
